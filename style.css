@@ -92,6 +92,10 @@ input[type=submit] {
     -webkit-border-radius: 12px;
 }
 
+input.error, select.error {
+	border: 1px red solid;
+}
+
 .error {
     background: pink;
 }

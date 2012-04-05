@@ -86,7 +86,6 @@
             var config = {
                     validationRuleAttribute : 'data-validation',
                     errorElementClass : 'error', // Class that will be put on elements which value is invalid
-                    borderColorOnError : 'red',
                     dateFormat : 'yyyy-mm-dd'
             };
 
@@ -99,20 +98,11 @@
                 language = jQueryFormUtils.LANG;
             }
 
-            var elementType = $element.attr('type');
-            if (jQueryFormUtils.defaultBorderColor === null && elementType !== 'submit' && elementType !== 'checkbox' && elementType !== 'radio') {
-                jQueryFormUtils.defaultBorderColor = $element.css('border-color');
-            }
-
             // Remove possible error style applied by previous validation
             $element
                 .removeClass(config.errorElementClass)
                 .parent()
                     .find('.jquery_form_error_message').remove();
-            
-            if(config.borderColorOnError !== '') {
-                $element.css('border-color', jQueryFormUtils.defaultBorderColor);
-            }
 
             var validation = jQueryFormUtils.validateInput($element, language, config);
 
@@ -123,10 +113,6 @@
                     .addClass(config.errorElementClass)
                     .parent()
                         .append('<span class="jquery_form_error_message">'+validation+'</span>');
-
-                if(config.borderColorOnError !== '') {
-                    $element.css('border-color', config.borderColorOnError);
-                }
 
                 if(attachKeyupEvent) {
                     $element.bind('keyup', function() {
@@ -152,7 +138,6 @@
             var config = {
                 ignore : [], // Names of inputs not to be validated even though node attribute containing the validation rules tells us to
                 errorElementClass : 'error', // Class that will be put on elements which value is invalid
-                borderColorOnError : 'red', // Border color of elements which value is invalid, empty string to not change border color
                 errorMessageClass : 'jquery_form_error_message', // class name of div containing error messages when validation fails
                 validationRuleAttribute : 'data-validation', // name of the attribute holding the validation rules
                 errorMessagePosition : 'top', // Can be either "top" or "element"
@@ -240,11 +225,6 @@
             $form.find('input,textarea,select').each(function() {
                 if (!ignoreInput($(this).attr('name'), $(this).attr('type'))) {
 
-                    // memorize border color
-                    if (jQueryFormUtils.defaultBorderColor === null && $(this).attr('type')) {
-                        jQueryFormUtils.defaultBorderColor = $(this).css('border-color');
-                    }
-
                     var valid = jQueryFormUtils.validateInput(
                                                     $(this),
                                                     language,
@@ -263,9 +243,7 @@
             //
             // Reset style and remove error class
             //
-            $form.find('input,textarea,select')
-                    .css('border-color', jQueryFormUtils.defaultBorderColor)
-                    .removeClass(config.errorElementClass);
+            $form.find('input,textarea,select').removeClass(config.errorElementClass);
 
 
             //
@@ -282,9 +260,6 @@
 
                 // Apply error style to invalid inputs
                 for (var i = 0; i < errorInputs.length; i++) {
-                    if (config.borderColorOnError !== '') {
-                        errorInputs[i].css('border-color', config.borderColorOnError);
-                    }
                     errorInputs[i].addClass(config.errorElementClass);
                 }
 
@@ -335,11 +310,6 @@
  * Namespace for helper functions
  */
 var jQueryFormUtils = {};
-
-/**
- * Static variable for holding default border color on input
- */
-jQueryFormUtils.defaultBorderColor = null;
 
 /**
  * Validate email
